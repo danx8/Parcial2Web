@@ -23,11 +23,11 @@ export class ProyectoEntity {
   @Column()
   estado: number;
 
-  @Column()
-  fechaInicio: string;
+  @Column({ type: 'timestamp' })
+  fechaInicio: Date;
 
-  @Column()
-  fechaFin: string;
+  @Column({ type: 'timestamp' })
+  fechaFin: Date;
 
   @ManyToOne(() => EstudianteEntity, estudiante => estudiante.proyectos)
   lider: EstudianteEntity;
