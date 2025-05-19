@@ -17,6 +17,9 @@ export class ProfesorEntity {
   departamento: string;
 
   @Column()
+  facultad: string;
+
+  @Column()
   extension: number;
 
   @Column()

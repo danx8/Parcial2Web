@@ -7,8 +7,11 @@ export class EvaluacionEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column('float')
   notaFinal: number;
+
+  @Column()
+  retroalimentacion: string;
 
   @ManyToOne(() => ProyectoEntity, proyecto => proyecto.evaluaciones)
   proyecto: ProyectoEntity;

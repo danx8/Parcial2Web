@@ -5,7 +5,7 @@ export class BusinessLogicException extends Error {
 }
 
 export enum BusinessError {
-  NOT_FOUND,
-  PRECONDITION_FAILED,
-  BAD_REQUEST,
+  NOT_FOUND = 404,
+  PRECONDITION_FAILED = 412,
+  BAD_REQUEST = 400
 } 

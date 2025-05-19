@@ -1,45 +1,58 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { EstudianteEntity } from './estudiante.entity';
+import { BusinessError, BusinessLogicException } from '../shared/errors/business-errors';
 
 @Injectable()
 export class EstudianteService {
-  private estudiantes: EstudianteEntity[] = [];
-  private nextId = 1;
+    constructor(
+        @InjectRepository(EstudianteEntity)
+        private readonly estudianteRepository: Repository<EstudianteEntity>
+    ) {}
 
-  async crearEstudiante(estudiante: EstudianteEntity): Promise<EstudianteEntity> {
-    if (estudiante.promedio <= 3.2) {
-      throw new Error('El promedio debe ser mayor a 3.2');
-    }
-    if (estudiante.semestre < 4) {
-      throw new Error('El semestre debe ser mayor o igual a 4');
-    }
-    
-    estudiante.id = this.nextId++;
-    this.estudiantes.push(estudiante);
-    return estudiante;
-  }
-
-  async eliminarEstudiante(id: number): Promise<void> {
-    const index = this.estudiantes.findIndex(e => e.id === id);
-    if (index === -1) {
-      throw new Error('Estudiante no encontrado');
+    async findAll(): Promise<EstudianteEntity[]> {
+        return await this.estudianteRepository.find({ relations: ['proyectos'] });
     }
 
-    const estudiante = this.estudiantes[index];
-    const proyectosActivos = estudiante.proyectos?.filter(p => p.estado < 4) || [];
-    
-    if (proyectosActivos.length > 0) {
-      throw new Error('No se puede eliminar un estudiante con proyectos activos');
+    async findOne(id: number): Promise<EstudianteEntity> {
+        const estudiante: EstudianteEntity = await this.estudianteRepository.findOne({
+            where: { id },
+            relations: ['proyectos']
+        });
+        if (!estudiante)
+            throw new BusinessLogicException("El estudiante no fue encontrado", BusinessError.NOT_FOUND);
+        return estudiante;
     }
 
-    this.estudiantes.splice(index, 1);
-  }
+    async create(estudiante: EstudianteEntity): Promise<EstudianteEntity> {
+        if (estudiante.promedio <= 3.2)
+            throw new BusinessLogicException("El promedio debe ser mayor a 3.2", BusinessError.PRECONDITION_FAILED);
+        if (estudiante.semestre < 4)
+            throw new BusinessLogicException("El semestre debe ser mayor o igual a 4", BusinessError.PRECONDITION_FAILED);
+        return await this.estudianteRepository.save(estudiante);
+    }
 
-  async findOne(id: number): Promise<EstudianteEntity | undefined> {
-    return this.estudiantes.find(e => e.id === id);
-  }
+    async update(id: number, estudiante: EstudianteEntity): Promise<EstudianteEntity> {
+        const persistedEstudiante: EstudianteEntity = await this.estudianteRepository.findOne({ where: { id } });
+        if (!persistedEstudiante)
+            throw new BusinessLogicException("El estudiante no fue encontrado", BusinessError.NOT_FOUND);
+        if (estudiante.promedio <= 3.2)
+            throw new BusinessLogicException("El promedio debe ser mayor a 3.2", BusinessError.PRECONDITION_FAILED);
+        if (estudiante.semestre < 4)
+            throw new BusinessLogicException("El semestre debe ser mayor o igual a 4", BusinessError.PRECONDITION_FAILED);
+        return await this.estudianteRepository.save({...persistedEstudiante, ...estudiante});
+    }
 
-  async findAll(): Promise<EstudianteEntity[]> {
-    return this.estudiantes;
-  }
+    async delete(id: number) {
+        const estudiante: EstudianteEntity = await this.estudianteRepository.findOne({
+            where: { id },
+            relations: ['proyectos']
+        });
+        if (!estudiante)
+            throw new BusinessLogicException("El estudiante no fue encontrado", BusinessError.NOT_FOUND);
+        if (estudiante.proyectos && estudiante.proyectos.some(p => p.estado > 0))
+            throw new BusinessLogicException("No se puede eliminar un estudiante con proyectos activos", BusinessError.PRECONDITION_FAILED);
+        await this.estudianteRepository.remove(estudiante);
+    }
 } 
