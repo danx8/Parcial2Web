@@ -1,0 +1,186 @@
+{
+	"info": {
+		"_postman_id": "bec72899-5286-4d80-8414-0f2c4099fb8b",
+		"name": "Estudiante",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29432671"
+	},
+	"item": [
+		{
+			"name": "Add a estudiante",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"cedula\": 123456789,\r\n    \"nombre\": \"Juan Pérez\",\r\n    \"semestre\": 6,\r\n    \"programa\": \"Ingeniería de Sistemas\",\r\n    \"promedio\": 4.2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/estudiantes",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"estudiantes"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Add a estudiante",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"cedula\": 123456789,\r\n    \"nombre\": \"Juan Pérez\",\r\n    \"semestre\": 6,\r\n    \"programa\": \"Ingeniería de Sistemas\",\r\n    \"promedio\": 4.2,\r\n    \"proyectos\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/estudiantes",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"estudiantes"
+							]
+						}
+					},
+					"_postman_previewlanguage": "",
+					"header": [],
+					"cookie": [
+						{
+							"expires": "Invalid Date"
+						}
+					],
+					"body": ""
+				}
+			]
+		},
+		{
+			"name": "Get estudiante",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"id\": 1,\r\n        \"cedula\": 123456789,\r\n        \"nombre\": \"Juan Pérez\",\r\n        \"semestre\": 6,\r\n        \"programa\": \"Ingeniería de Sistemas\",\r\n        \"promedio\": 4.2,\r\n        \"proyectos\": []\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/estudiantes",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"estudiantes"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get estudiante",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"cedula\": 123456789,\r\n    \"nombre\": \"Juan Pérez\",\r\n    \"semestre\": 6,\r\n    \"programa\": \"Ingeniería de Sistemas\",\r\n    \"promedio\": 4.2,\r\n    \"proyectos\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/estudiantes",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"estudiantes"
+							]
+						}
+					},
+					"_postman_previewlanguage": "",
+					"header": [],
+					"cookie": [
+						{
+							"expires": "Invalid Date"
+						}
+					],
+					"body": ""
+				}
+			]
+		},
+		{
+			"name": "Put estudiante",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"cedula\": 123456789,\r\n    \"nombre\": \"Juan Pérez Actualizado\",\r\n    \"semestre\": 7,\r\n    \"programa\": \"Ingeniería de Sistemas\",\r\n    \"promedio\": 4.3\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/estudiantes",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"estudiantes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"message\": \"No se puede eliminar un estudiante con proyectos activos\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/estudiantes/123456788",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"estudiantes",
+						"123456788"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
