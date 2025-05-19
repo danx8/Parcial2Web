@@ -1,15 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { ProyectoEntity } from './proyecto.entity';
 import { EstudianteEntity } from '../estudiante/estudiante.entity';
 
 @Injectable()
 export class ProyectoService {
-  constructor(
-    @InjectRepository(ProyectoEntity)
-    private readonly proyectoRepository: Repository<ProyectoEntity>,
-  ) {}
+  private proyectos: ProyectoEntity[] = [];
+  private nextId = 1;
 
   async crearProyecto(proyecto: ProyectoEntity): Promise<ProyectoEntity> {
     if (proyecto.presupuesto <= 0) {
@@ -18,13 +14,15 @@ export class ProyectoService {
     if (proyecto.titulo.length <= 15) {
       throw new Error('El título debe tener más de 15 caracteres');
     }
-    return await this.proyectoRepository.save(proyecto);
+    
+    proyecto.id = this.nextId++;
+    proyecto.estado = 1; // Estado inicial
+    this.proyectos.push(proyecto);
+    return proyecto;
   }
 
   async avanzarProyecto(id: number): Promise<ProyectoEntity> {
-    const proyecto = await this.proyectoRepository.findOne({
-      where: { id },
-    });
+    const proyecto = this.proyectos.find(p => p.id === id);
 
     if (!proyecto) {
       throw new Error('Proyecto no encontrado');
@@ -35,19 +33,24 @@ export class ProyectoService {
     }
 
     proyecto.estado += 1;
-    return await this.proyectoRepository.save(proyecto);
+    return proyecto;
   }
 
   async findAllEstudiantes(proyectoId: number): Promise<EstudianteEntity[]> {
-    const proyecto = await this.proyectoRepository.findOne({
-      where: { id: proyectoId },
-      relations: ['lider'],
-    });
+    const proyecto = this.proyectos.find(p => p.id === proyectoId);
 
     if (!proyecto) {
       throw new Error('Proyecto no encontrado');
     }
 
     return [proyecto.lider]; // En este caso solo retornamos el líder ya que es la única relación con estudiantes
+  }
+
+  async findOne(id: number): Promise<ProyectoEntity | undefined> {
+    return this.proyectos.find(p => p.id === id);
+  }
+
+  async findAll(): Promise<ProyectoEntity[]> {
+    return this.proyectos;
   }
 } 

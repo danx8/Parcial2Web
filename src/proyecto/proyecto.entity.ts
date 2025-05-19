@@ -23,18 +23,18 @@ export class ProyectoEntity {
   @Column()
   estado: number;
 
-  @Column({ type: 'timestamp' })
+  @Column('datetime')
   fechaInicio: Date;
 
-  @Column({ type: 'timestamp' })
+  @Column('datetime')
   fechaFin: Date;
 
-  @ManyToOne(() => EstudianteEntity, estudiante => estudiante.proyectos)
+  @ManyToOne(() => EstudianteEntity, (estudiante) => estudiante.proyectos)
   lider: EstudianteEntity;
 
-  @ManyToOne(() => ProfesorEntity, profesor => profesor.mentorias)
+  @ManyToOne(() => ProfesorEntity, (profesor) => profesor.mentorias)
   mentor: ProfesorEntity;
 
-  @OneToMany(() => EvaluacionEntity, evaluacion => evaluacion.proyecto)
+  @OneToMany(() => EvaluacionEntity, (evaluacion) => evaluacion.proyecto)
   evaluaciones: EvaluacionEntity[];
 } 

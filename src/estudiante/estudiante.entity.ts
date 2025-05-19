@@ -21,6 +21,6 @@ export class EstudianteEntity {
   @Column()
   promedio: number;
 
-  @OneToMany(() => ProyectoEntity, proyecto => proyecto.lider)
+  @OneToMany(() => ProyectoEntity, (proyecto) => proyecto.lider)
   proyectos: ProyectoEntity[];
 } 
